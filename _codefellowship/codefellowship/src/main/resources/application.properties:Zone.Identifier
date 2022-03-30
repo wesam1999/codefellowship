@@ -1,0 +1,6 @@
+server.port=8081
+spring.datasource.platform=postgres
+spring.datasource.url=jdbc:postgresql://localhost:5432/demo12
+spring.datasource.username=wesam
+spring.jpa.hibernate.ddl-auto=update
+spring.datasource.initialization-mode=always
