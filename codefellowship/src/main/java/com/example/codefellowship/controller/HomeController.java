@@ -10,9 +10,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.view.RedirectView;
+
+import javax.transaction.Transactional;
 
 @Controller
 public class HomeController {
@@ -80,11 +83,35 @@ model.addAttribute("Courses",userRepository.findAll());
 @GetMapping("/users/{id}")
 public String getusersid(Model model,@RequestParam int id){
 
-    model.addAttribute("Courses",userRepository.findById(id));
+    model.addAttribute("CoursesOne",userRepository.findById(id));
         return "user";
 }
 
+    @Transactional
+    @GetMapping("/follow/{id}")
+    String showFollowSuccessScreen(@PathVariable("id") int id, Model model) {
 
+        ApplicationUser usertofollow = userRepository.findById(id).orElseThrow();
+
+        ApplicationUser currentLoggedInUser = userRepository.findById(1).orElseThrow();
+        currentLoggedInUser.getFollowers().add(usertofollow);
+
+        usertofollow.getFollowing().add(currentLoggedInUser);
+
+        userRepository.save(usertofollow);
+        userRepository.save(currentLoggedInUser);
+
+        return "success";
+    }
+    @GetMapping("/feed")
+public String getfeedPage(){
+
+
+
+
+
+        return "feed";
+    }
 
 
 
